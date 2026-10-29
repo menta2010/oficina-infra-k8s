@@ -155,5 +155,5 @@ resource "aws_vpc_security_group_ingress_rule" "nlb_para_nodeport" {
   from_port         = var.app_node_port
   to_port           = var.app_node_port
   ip_protocol       = "tcp"
-  description       = "NLB interno -> NodePort da API"
+  description       = "NLB interno para o NodePort da API"
 }
