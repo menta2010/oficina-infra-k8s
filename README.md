@@ -9,9 +9,19 @@ Repositório 2 de 4 do Tech Challenge da Fase 3 (SOAT):
 | oficina-lambda-auth | Lambdas de autenticação (CPF e funcionário) e job de inativação de clientes |
 | **oficina-infra-k8s** (este) | VPC, EKS, API Gateway, NLB, segredos JWT e webhook, SNS, ECR, New Relic |
 | oficina-infra-db | RDS PostgreSQL, security groups e segredo do banco |
-| oficina-app | API de ordens de serviço rodando no Kubernetes |
+| [tech-challenge-oficina-mecanica](https://github.com/menta2010/tech-challenge-oficina-mecanica) | API de ordens de serviço rodando no Kubernetes |
 
 **Ordem de deploy:** **infra-k8s** → infra-db → lambda-auth → app. Este é o primeiro: os outros encontram a VPC, o cluster e o API Gateway pelos nomes `oficina-<ambiente>-*`.
+
+## Links
+
+| Item | Link |
+| --- | --- |
+| API publicada (prod) | https://7d2ypan7l9.execute-api.us-east-1.amazonaws.com |
+| Swagger | https://7d2ypan7l9.execute-api.us-east-1.amazonaws.com/swagger |
+| Collection Postman | [oficina-fase3.postman_collection.json](https://github.com/menta2010/tech-challenge-oficina-mecanica/blob/master/docs/postman/oficina-fase3.postman_collection.json) |
+
+O ambiente roda no AWS Academy: a URL só responde enquanto o laboratório está ligado.
 
 ## Arquitetura deste repositório
 
@@ -61,7 +71,7 @@ flowchart LR
 | Camada | Mecanismo |
 | --- | --- |
 | Entrada | **Rate limit no API Gateway**: 50 req/s sustentado e rajada de 100 no gateway inteiro; 5 req/s nas rotas `/auth/*` (aplicado pelo repo `oficina-lambda-auth`, dono dessas rotas). Acima disso o gateway responde **429** sem tocar no cluster |
-| Pods | **HPA** da aplicação (CPU/memória, definido no repo `oficina-app`), lendo métricas do metrics-server |
+| Pods | **HPA** da aplicação (CPU/memória, definido no repo `tech-challenge-oficina-mecanica`), lendo métricas do metrics-server |
 | Nós | **Cluster Autoscaler**: quando o HPA cria pods que não cabem, o node group cresce até 4 nós e encolhe depois de 5 min ociosos |
 | Balanceamento | NLB interno distribui entre todos os nós; o target group acompanha o autoscaling do node group |
 
@@ -115,5 +125,5 @@ Configuração no GitHub (uma vez):
 | `api_endpoint` | URL base das APIs (Postman, vídeo, README dos outros repositórios) |
 | `swagger_url` | Swagger da API publicada |
 | `cluster_name` | `aws eks update-kubeconfig` |
-| `ecr_repository_url` | Destino da imagem da API no pipeline do `oficina-app` |
+| `ecr_repository_url` | Destino da imagem da API no pipeline do `tech-challenge-oficina-mecanica` |
 | `sns_topic_arn` | Configuração `Notificacoes__SnsTopicArn` da API |
